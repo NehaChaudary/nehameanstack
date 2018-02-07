@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import * as Firebase from 'firebase';
 import { OnInit } from '@angular/core';
+import { AuthServiceImpl } from './auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,8 +9,9 @@ import { OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit  {
 
-  ngOnInit(): void {
+
   
+  constructor(private authService: AuthServiceImpl){
 
   let  config = {
     apiKey: "AIzaSyBjiZV4MLSYq5rYx1Ykhqmns0odXHe_Gpk",
@@ -21,5 +23,8 @@ export class AppComponent implements OnInit  {
   };
   Firebase.initializeApp(config);
 }
+ngOnInit(): void {
+      this.authService.reloadTokenAndUserDetail()
+     }
 
 }

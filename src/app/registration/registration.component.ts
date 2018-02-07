@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserModel } from '../model/user.model';
 import { AuthServiceImpl } from '../auth.service';
-import { resolve } from 'dns';
-import { reject } from 'q';
+import * as Firebase from 'firebase';
+import { Router } from '@angular/router';
+
+
 
 
 
@@ -17,15 +19,10 @@ export class RegistrationComponent implements OnInit {
   
    user: UserModel = new UserModel();
 
-  constructor(private authService : AuthServiceImpl){
+  constructor(private authService : AuthServiceImpl,private router:Router){
     
   }
 
-  signUpWithEmailAndPassword(email, password){
-    console.log("email is ",email)
-    console.log("password is ",password)
-    this.authService.userSignUp(email, password)
-  }
 private validateCredential(email,password)
 {
   this.validate(email,password).then((response)=>{
@@ -55,6 +52,39 @@ private validateCredential(email,password)
         
       })   
     }
+
+
+
+      signUpWithEmailAndPassword(email,password){
+           console.log("mail is ",email)
+          console.log("password is ",password)
+          this.authService.userSignUp(email,password).subscribe((response:Firebase.User)=>{
+          console.log(response)
+          let currentUser:Firebase.User=Firebase.auth().currentUser
+          console.log("current user email is ",currentUser.email)
+          console.log("current user  name is",currentUser.displayName)
+          alert("you has been successfully registered")
+          this.router.navigate(['login'])
+
+          currentUser.getIdToken(true).then((token:string)=>{
+            console.log("token is ",token)
+        
+        }  ,(error:any)=>{
+            console.log(error)
+
+          })
+          console.log("we got google firebase response")
+
+          },error =>{
+            console.log(error.message)
+          alert(error.message)
+          })
+          
+        
+
+}
+
+
   signInWithGoogle(){
       
   }
